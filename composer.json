@@ -1,0 +1,27 @@
+{
+    "name": "aspov/diff-app",
+    "description": "project #2",
+    "type": "project",
+    "bin": [
+        "bin/gendiff"
+    ],
+    "authors": [
+        {
+            "name": "Alex Aspov",
+            "email": "asp73rus@mail.ru"
+        }
+    ],
+    "autoload": {
+        "files": [           
+        ]
+    },
+    "scripts": {
+        "phpcs": "phpcs"
+    },    
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.4"
+    }
+}
