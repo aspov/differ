@@ -10,3 +10,6 @@ $ composer global require aspov/Differ
 ```
 $ genDiff path\To\file1.json path\to\file2.json
 ```
+for example:
+
+[![asciicast](https://asciinema.org/a/263424.svg)](https://asciinema.org/a/263424)
