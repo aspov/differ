@@ -1,7 +1,8 @@
 <?php
 namespace Differ;
 
-use function Differ\diffFunctions\genDiff;
+#use function Differ\functions\genDiff;
+use Differ\Report;
 
 $doc = <<<DOC
 Generate diff
@@ -17,8 +18,6 @@ Options:
   --format <fmt>                Report format [default: pretty]
 DOC;
 
-#require(__DIR__ . '/../vendor/docopt//docopt/src/docopt.php');
-#print_r(array_slice($_SERVER['argv'], 1));
 $handler = new \Docopt\Handler(array(
     'help' => true,
     'version' => 'Generate diff v0.1',
@@ -28,5 +27,7 @@ $handler = new \Docopt\Handler(array(
 $response = $handler->handle($doc);
 $path1 = $response['<firstFile>'];
 $path2 = $response['<secondFile>'];
-echo (genDiff($path1, $path2));
+$report = new Report($response->args);
+$result = $report->genDiff($path1, $path2);
+echo ($result);
 echo ("\n");

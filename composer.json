@@ -12,8 +12,11 @@
         }
     ],
     "autoload": {
+        "psr-4": {
+            "Differ\\": "src"
+        },
         "files": [
-            "src/diffFunctions.php"                    
+            "src/functions.php"                    
         ]
     },
     "scripts": {
