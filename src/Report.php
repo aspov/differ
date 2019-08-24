@@ -15,14 +15,19 @@ class Report
         $this->options = array_merge(self::OPTIONS, $option);
     }
     
+    public function getFile($path)
+    {
+        $pathToFile = $path[0] == '/' ? $path : $_SERVER['PWD'] . '/' . $path;
+        $file = new SplFileObject($pathToFile);
+        return $file;
+    }
+
     public function genDiff($path1, $path2)
     {
-        $pathToFile1 = $path1[0] == '/' ? $path1 : $_SERVER['PWD'] . '/' . $path1;
-        $pathToFile2 = $path2[0] == '/' ? $path2 : $_SERVER['PWD'] . '/' . $path2;
-        $file1 = new SplFileObject($pathToFile1);
-        $file2 = new SplFileObject($pathToFile2);
+        $file1 = $this->getFile($path1);
+        $file2 = $this->getFile($path2);
         $diff = $this->getFromJson($file1, $file2);
-        return implode("\n", $diff);
+        return $diff;
     }
 
     public function getFromJson($file1, $file2)
@@ -49,7 +54,7 @@ class Report
             }
             return $diff;
         }, []);
-        return $result;
+        return implode("\n", $result);
     }
 
     public function normalize($value)
