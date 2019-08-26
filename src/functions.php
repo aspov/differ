@@ -7,5 +7,5 @@ function genDiff($path1, $path2)
 {
     $report = new Report();
     $result = $report->genDiff($path1, $path2);
-    return implode("\n", $result);
+    return $result;
 }

@@ -1,69 +1,65 @@
 <?php
 namespace Differ;
 
-use SplFileObject;
+use Differ\Parser;
 
 class Report
 {
-    const OPTIONS = [
-    ];
+    const OPTIONS = [];
     private $options = [];
-    public $result;
 
     public function __construct(array $option = self::OPTIONS)
     {
         $this->options = array_merge(self::OPTIONS, $option);
     }
     
-    public function getFile($path)
-    {
-        $pathToFile = $path[0] == '/' ? $path : $_SERVER['PWD'] . '/' . $path;
-        $file = new SplFileObject($pathToFile);
-        return $file;
-    }
-
     public function genDiff($path1, $path2)
     {
-        $file1 = $this->getFile($path1);
-        $file2 = $this->getFile($path2);
-        $diff = $this->getFromJson($file1, $file2);
-        return $diff;
+        $parser = new Parser();
+        $content1 = $parser->parseFile($path1)->getContent();
+        $content2 = $parser->parseFile($path2)->getContent();
+        $diff = $this->compare($content1, $content2);
+        $report = $this->getReport($diff);
+        return $report;
     }
 
-    public function getFromJson($file1, $file2)
+    public function compare($content1, $content2)
     {
-        $content1 = json_decode($file1->fread($file1->getSize()), true);
-        $content2 = json_decode($file2->fread($file2->getSize()), true);
-        $Keys = array_keys(array_merge($content1, $content2));
-        
-        $result = array_reduce($Keys, function ($diff, $item) use ($content1, $content2) {
-            $value1 = isset($content1[$item]) ? $this->normalize($content1[$item]) : null;
-            $value2 = isset($content2[$item]) ? $this->normalize($content2[$item]) : null;
-        
-            if (isset($content1[$item]) && isset($content2[$item])) {
+        $keys = array_keys(array_merge($content1, $content2));
+        $diffResult = array_reduce($keys, function ($diff, $item) use ($content1, $content2) {
+            $value1 = array_key_exists($item, $content1) ? $content1[$item] : null;
+            $value2 = array_key_exists($item, $content2) ? $content2[$item] : null;
+
+            if (array_key_exists($item, $content1) && array_key_exists($item, $content2)) {
                 if ($value1 == $value2) {
-                    $diff[] = "  {$item} : {$value1}";
+                    $diff[$item] = $value1;
                 } else {
-                    $diff[] = "- {$item} : {$value1}";
-                    $diff[] = "+ {$item} : {$value2}";
+                    $diff[$item] = ['-' => $value1, '+' => $value2];
                 }
-            } elseif (isset($content1[$item])) {
-                $diff[] = "- {$item} : {$value1}";
-            } elseif (isset($content2[$item])) {
-                $diff[] = "+ {$item} : {$value2}";
+            } elseif (array_key_exists($item, $content1)) {
+                $diff[$item] = ['-' => $value1];
+            } elseif (array_key_exists($item, $content2)) {
+                $diff[$item] = ['+' => $value2];
             }
             return $diff;
         }, []);
-        return implode("\n", $result);
+        return $diffResult;
     }
 
-    public function normalize($value)
+    public function getReport($result, $format = '')
     {
-        if (is_bool($value)) {
-            $result = $value ? 'true' : 'false';
-        } else {
-            return $value;
+        $report = [];
+        foreach ($result as $key => $value) {
+            if (!is_array($result[$key])) {
+                $report[] = "  $key : $value";
+            } elseif (count($result[$key]) == 2) {
+                $report[] = "- {$key} : {$result[$key]['-']}";
+                $report[] = "+ {$key} : {$result[$key]['+']}";
+            } elseif (count($result[$key]) == 1) {
+                $keyName = array_key_exists('+', $result[$key]) ? '+' : '-';
+                $report[] = "{$keyName} {$key} : {$result[$key][$keyName]}";
+            }
         }
-        return $result;
+        return implode("\n", $report);
     }
 }

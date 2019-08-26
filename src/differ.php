@@ -27,7 +27,7 @@ $handler = new \Docopt\Handler(array(
 $response = $handler->handle($doc);
 $path1 = $response['<firstFile>'];
 $path2 = $response['<secondFile>'];
-$report = new Report($response->args);
+$report = new Report($response->args); //config
 $result = $report->genDiff($path1, $path2);
 echo ($result);
 echo ("\n");
