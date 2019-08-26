@@ -9,15 +9,11 @@ php:
 install:
   - make install
 
-script: make lint test
-
-before_script:  
+before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-
-script: make lint test
-
-after_script:
-  - "phpunit --coverage-text --coverage-clover build/logs/clover.xml"
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build  -t clover --exit-code $TRAVIS_TEST_RESULT; fi
+script:
+  - make lint test
+  - "phpunit --testsuite=unit --coverage-text --coverage-clover build/logs/clover.xml"
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
