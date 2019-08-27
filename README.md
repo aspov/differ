@@ -13,6 +13,8 @@ $ composer global require aspov/differ
 ```
 $ gendiff path\To\file1.json path\to\file2.json
 ```
-for example:
-
+### Examples
+Json
 [![asciicast](https://asciinema.org/a/263630.svg)](https://asciinema.org/a/263630)
+Yaml
+[![asciicast](https://asciinema.org/a/264453.svg)](https://asciinema.org/a/264453)
