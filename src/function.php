@@ -6,6 +6,7 @@ use Differ\Report;
 function genDiff($path1, $path2)
 {
     $report = new Report();
-    $result = $report->genDiff($path1, $path2);
+    $diff = $report->genDiff($path1, $path2);
+    $result = $report->getReport($diff, 'pretty');
     return $result;
 }

@@ -4,5 +4,5 @@
   "host": "hexlet.io",
   "same": "same value",
   "test3": "1234",
-  "test4": "null"
+  "test4": false
 }

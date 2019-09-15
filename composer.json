@@ -16,7 +16,8 @@
             "Differ\\": "src"
         },
         "files": [
-            "src/functions.php"                    
+            "src/function.php",
+            "src/parsers.php"                    
         ]
     },
     "scripts": {
