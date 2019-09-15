@@ -20,3 +20,5 @@ Yaml
 [![asciicast](https://asciinema.org/a/264453.svg)](https://asciinema.org/a/264453)
 AST
 [![asciicast](https://asciinema.org/a/268568.svg)](https://asciinema.org/a/268568)
+Plain format
+[![asciicast](https://asciinema.org/a/268627.svg)](https://asciinema.org/a/268627)
