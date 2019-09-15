@@ -13,7 +13,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Differ\\": "src"
+            "Differ\\": "src",
+	    "Differ\\formatters\\": "src/formatters"
         },
         "files": [
             "src/function.php",

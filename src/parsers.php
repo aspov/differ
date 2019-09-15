@@ -18,21 +18,23 @@ function parseFile($filePath)
     }
 }
 
-function normalize($data, $result = [])
+function normalize($data)
 {
     $data = get_object_vars($data);
-    foreach ($data as $key => $value) {
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
+    $keys = array_keys($data);
+    $result = array_reduce($keys, function ($result, $key) use ($data) {
+        if (is_bool($data[$key])) {
+            $data[$key] = $data[$key] ? 'true' : 'false';
         }
-        if (is_null($value)) {
-            $value = 'null';
+        if (is_null($data[$key])) {
+            $data[$key] = 'null';
         }
         if (is_object($data[$key])) {
             $result[$key] = (object)normalize($data[$key]);
         } else {
-            $result[$key] = $value;
+            $result[$key] = $data[$key];
         }
-    }
+        return $result;
+    }, []);
     return $result;
 }

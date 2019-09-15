@@ -1,7 +1,7 @@
 <?php
 namespace Differ;
 
-use Differ\Report;
+use Differ\Differ;
 
 $doc = <<<DOC
 Generate diff
@@ -18,7 +18,6 @@ Options:
 DOC;
 
 $handler = new \Docopt\Handler();
-$report = new Report($handler->handle($doc)->args);
-$diff = $report->genDiff();
-$result = $report->getReport($diff);
+$differ = new Differ($handler->handle($doc)->args);
+$result = $differ->genDiff()->report;
 echo($result . "\n");
