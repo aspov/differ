@@ -11,8 +11,28 @@ $ composer global require aspov/differ
 ## Usage
 
 ```
-$ gendiff path\To\file1.json path\to\file2.json
+$ gendiff --format=json path\To\file1.json path\to\file2.json
+
+Usage:
+  gendiff (-h|--help)
+  gendiff (-v|--version)
+  gendiff [--format <fmt>] <firstFile> <secondFile>
+
+Options:
+  -h --help                     Show this screen
+  -v --version                  Show version
+  --format <fmt>                Report format [default: pretty]
 ```
+To your project, you can use the function
+```php
+<?php
+
+use function Differ\DifferFunction\genDiff;
+
+$diff = genDiff(path\To\file1.json, path\to\file2.json, 'json');
+```
+Supported extensions: json, yaml. Report formats: pretty, plain, json.
+
 ### Examples
 Json
 [![asciicast](https://asciinema.org/a/263630.svg)](https://asciinema.org/a/263630)
@@ -22,3 +42,5 @@ AST
 [![asciicast](https://asciinema.org/a/268568.svg)](https://asciinema.org/a/268568)
 Plain format
 [![asciicast](https://asciinema.org/a/268627.svg)](https://asciinema.org/a/268627)
+Json format
+[![asciicast](https://asciinema.org/a/269034.svg)](https://asciinema.org/a/269034)
