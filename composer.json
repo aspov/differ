@@ -12,13 +12,12 @@
         }
     ],
     "autoload": {
-        "psr-4": {
-            "Differ\\": "src",
-	        "Differ\\formatters\\": "src/formatters"
-        },
         "files": [
-            "src/function.php",
-            "src/parsers.php"                    
+            "src/differ.php",            
+            "src/parsers.php",
+            "src/formatters/jsonFormatter.php",
+            "src/formatters/plainFormatter.php",
+            "src/formatters/prettyFormatter.php"
         ]
     },
     "scripts": {
