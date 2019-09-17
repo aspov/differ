@@ -42,7 +42,7 @@ function compare($content1, $content2)
         } elseif (array_key_exists($key, $content2)) {
                 $astAction = ['action' => 'add'];
                 $itemValue = $value2;
-       }
+        }
         $astValue = ($children ?? false) ? ['children' => $children] : ['value' => $itemValue];
         return (object)array_merge(['key' => $key], $astAction ?? [], $astValue);
     }, array_keys(array_merge($content1, $content2)));
