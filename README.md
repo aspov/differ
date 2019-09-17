@@ -27,7 +27,7 @@ To your project, you can use the function
 ```php
 <?php
 
-use function Differ\DifferFunction\genDiff;
+use function Differ\differ\genDiff;
 
 $diff = genDiff(path\To\file1.json, path\to\file2.json, 'json');
 ```
