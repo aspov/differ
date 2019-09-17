@@ -2,9 +2,6 @@
 namespace Differ;
 
 use function Differ\Parsers\parseFile;
-use \Funct\Collection;
-use Differ\formatters\PlainFormatter;
-use Differ\formatters\PrettyFormatter;
 
 class Differ
 {
@@ -25,9 +22,11 @@ class Differ
         $content2 = parseFile($path2);
         $diff = $this->compare($content1, $content2);
         if ($format == 'pretty') {
-            return new PrettyFormatter($diff);
+            return new formatters\PrettyFormatter($diff);
         } elseif ($format == 'plain') {
-            return new PlainFormatter($diff);
+            return new formatters\PlainFormatter($diff);
+        } elseif ($format == 'json') {
+            return new formatters\JsonFormatter($diff);
         }
     }
 

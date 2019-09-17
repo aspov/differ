@@ -1,12 +1,10 @@
 <?php
-namespace Differ\functions;
+namespace Differ\DifferFunction;
 
-use Differ\Report;
+use Differ\Differ;
 
-function genDiff($path1, $path2)
+function genDiff($path1, $path2, $format = null)
 {
-    $report = new Report();
-    $diff = $report->genDiff($path1, $path2);
-    $result = $report->getReport($diff, 'pretty');
-    return $result;
+    $differ = new Differ();
+    return $differ->genDiff($path1, $path2, $format)->report;
 }

@@ -17,7 +17,6 @@ Options:
   --format <fmt>                Report format [default: pretty]
 DOC;
 
-$handler = new \Docopt\Handler();
+$handler = new \Docopt\Handler(array('version' => 'Generate diff v0.1'));
 $differ = new Differ($handler->handle($doc)->args);
-$result = $differ->genDiff()->report;
-echo($result . "\n");
+echo($differ->genDiff()->report . "\n");
