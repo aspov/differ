@@ -1,59 +1,82 @@
-[{
-	"key": "common",
-	"children": [{
-		"key": "setting1",
-		"value": "Value 1"
-	}, {
-		"key": "setting2",
-		"action": "remove",
-		"value": "200"
-	}, {
-		"key": "setting3",
-		"value": "true"
-	}, {
-		"key": "setting6",
-		"action": "remove",
-		"children": {
-			"key": "key",
-			"value": "value"
-		}
-	}, {
-		"key": "setting4",
-		"action": "add",
-		"value": "blah blah"
-	}, {
-		"key": "setting5",
-		"action": "add",
-		"children": {
-			"key": "key5",
-			"value": "value5"
-		}
-	}]
-}, {
-	"key": "group1",
-	"children": [{
-		"key": "baz",
-		"action": "change",
-		"value": {
-			"removed": "bas",
-			"added": "bars"
-		}
-	}, {
-		"key": "foo",
-		"value": "bar"
-	}]
-}, {
-	"key": "group2",
-	"action": "remove",
-	"children": {
-		"key": "abc",
-		"value": "12345"
-	}
-}, {
-	"key": "group3",
-	"action": "add",
-	"children": {
-		"key": "fee",
-		"value": "100500"
-	}
-}]
+[
+    {
+        "key": "common",
+        "children": [
+            {
+                "key": "setting1",
+                "value": "Value 1"
+            },
+            {
+                "key": "setting2",
+                "action": "remove",
+                "value": "200"
+            },
+            {
+                "key": "setting3",
+                "value": "true"
+            },
+            {
+                "key": "setting6",
+                "action": "remove",
+                "children": [
+                    {
+                        "key": "key",
+                        "value": "value"
+                    }
+                ]
+            },
+            {
+                "key": "setting4",
+                "action": "add",
+                "value": "blah blah"
+            },
+            {
+                "key": "setting5",
+                "action": "add",
+                "children": [
+                    {
+                        "key": "key5",
+                        "value": "value5"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "key": "group1",
+        "children": [
+            {
+                "key": "baz",
+                "action": "change",
+                "value": {
+                    "removed": "bas",
+                    "added": "bars"
+                }
+            },
+            {
+                "key": "foo",
+                "value": "bar"
+            }
+        ]
+    },
+    {
+        "key": "group2",
+        "action": "remove",
+        "children": [
+            {
+                "key": "abc",
+                "value": "12345"
+            }
+        ]
+    },
+    {
+        "key": "group3",
+        "action": "add",
+        "children": [
+            {
+                "key": "fee",
+                "value": "100500"
+            }
+        ]
+    }
+]

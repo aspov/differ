@@ -8,8 +8,8 @@ use function Differ\formatters\jsonFormatter;
 
 function genDiff($filePath1, $filePath2, $format = 'pretty')
 {
-    $content1 = parseFile($filePath1);
-    $content2 = parseFile($filePath2);
+    $content1 = normalize(parseFile($filePath1));
+    $content2 = normalize(parseFile($filePath2));
     $diff = compare($content1, $content2);
     if ($format == 'pretty') {
         return prettyFormatter($diff);
@@ -46,5 +46,26 @@ function compare($content1, $content2)
         $astValue = ($children ?? false) ? ['children' => $children] : ['value' => $itemValue];
         return (object)array_merge(['key' => $key], $astAction ?? [], $astValue);
     }, array_keys(array_merge($content1, $content2)));
+    return $result;
+}
+
+function normalize($data)
+{
+    $data = get_object_vars($data);
+    $keys = array_keys($data);
+    $result = array_reduce($keys, function ($result, $key) use ($data) {
+        if (is_bool($data[$key])) {
+            $data[$key] = $data[$key] ? 'true' : 'false';
+        }
+        if (is_null($data[$key])) {
+            $data[$key] = 'null';
+        }
+        if (is_object($data[$key])) {
+            $result[$key] = (object)normalize($data[$key]);
+        } else {
+            $result[$key] = $data[$key];
+        }
+        return $result;
+    }, []);
     return $result;
 }
