@@ -13,6 +13,7 @@
     ],
     "autoload": {
         "files": [
+            "src/cli.php",
             "src/differ.php",            
             "src/parsers.php",
             "src/formatters/jsonFormatter.php",

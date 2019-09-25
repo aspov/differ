@@ -3,7 +3,7 @@ namespace Differ;
 
 use function Differ\differ\genDiff;
 
-$doc = <<<DOC
+const DOC = <<<DOC
 Generate diff
 
 Usage:
@@ -16,11 +16,13 @@ Options:
   -v --version                  Show version
   --format <fmt>                Report format [default: pretty]
 DOC;
-
-$handler = new \Docopt\Handler(array('version' => 'Generate diff v0.1'));
-$args = $handler->handle($doc)->args;
-$path1 = $args['<firstFile>'];
-$path2 = $args['<secondFile>'];
-$format = $args['--format'];
-$diff = genDiff($path1, $path2, $format);
-echo($diff . "\n");
+function run()
+{
+    $handler = new \Docopt\Handler(array('version' => 'Generate diff v0.1'));
+    $args = $handler->handle(DOC)->args;
+    $path1 = $args['<firstFile>'];
+    $path2 = $args['<secondFile>'];
+    $format = $args['--format'];
+    $diff = genDiff($path1, $path2, $format);
+    echo($diff . "\n");
+}
