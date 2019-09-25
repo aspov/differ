@@ -1,6 +1,7 @@
 # Differ
 [![Build Status](https://travis-ci.org/aspov/php-project-lvl2.svg?branch=master)](https://travis-ci.org/aspov/php-project-lvl2)
 [![Maintainability](https://api.codeclimate.com/v1/badges/770ba18631330fdf088d/maintainability)](https://codeclimate.com/github/aspov/php-project-lvl2/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/770ba18631330fdf088d/test_coverage)](https://codeclimate.com/github/aspov/php-project-lvl2/test_coverage)
 
 Generates a difference between files
 
