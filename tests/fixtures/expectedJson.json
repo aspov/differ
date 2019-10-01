@@ -8,16 +8,16 @@
             },
             {
                 "key": "setting2",
-                "action": "remove",
+                "type": "removed",
                 "value": "200"
             },
             {
                 "key": "setting3",
-                "value": "true"
+                "value": true
             },
             {
                 "key": "setting6",
-                "action": "remove",
+                "type": "removed",
                 "children": [
                     {
                         "key": "key",
@@ -27,12 +27,12 @@
             },
             {
                 "key": "setting4",
-                "action": "add",
+                "type": "added",
                 "value": "blah blah"
             },
             {
                 "key": "setting5",
-                "action": "add",
+                "type": "added",
                 "children": [
                     {
                         "key": "key5",
@@ -47,10 +47,10 @@
         "children": [
             {
                 "key": "baz",
-                "action": "change",
+                "type": "changed",
                 "value": {
-                    "removed": "bas",
-                    "added": "bars"
+                    "old": "bas",
+                    "new": "bars"
                 }
             },
             {
@@ -61,7 +61,7 @@
     },
     {
         "key": "group2",
-        "action": "remove",
+        "type": "removed",
         "children": [
             {
                 "key": "abc",
@@ -71,7 +71,7 @@
     },
     {
         "key": "group3",
-        "action": "add",
+        "type": "added",
         "children": [
             {
                 "key": "fee",

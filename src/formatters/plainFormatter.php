@@ -6,16 +6,19 @@ use \Funct\Collection;
 function plainFormatter($diff, $depthKey = '')
 {
     $reportResult = array_reduce($diff, function ($report, $item) use ($depthKey) {
-        $action = $item->action ?? '';
+        $type = $item->type ?? '';
         $key = "'{$depthKey}{$item->key}'";
         $value = isset($item->children) ? 'complex value' : $item->value;
-        if ($action) {
-            ($action == 'add') ?
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        }
+        if ($type) {
+            ($type == 'added') ?
             $report[] = "Property {$key} was added with value: '$value'" : null;
-            ($action == 'remove') ?
+            ($type == 'removed') ?
             $report[] = "Property {$key} was removed" : null;
-            ($action == 'change') ?
-            $report[] = "Property {$key} was changed. From '$value[removed]' to '$value[added]'" : null;
+            ($type == 'changed') ?
+            $report[] = "Property {$key} was changed. From '$value[old]' to '$value[new]'" : null;
         }
         if (isset($item->children)) {
             $depthKey = "$item->key.";

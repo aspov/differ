@@ -2,7 +2,6 @@
 namespace Differ\tests;
 
 use \PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Yaml;
 use function Differ\differ\genDiff;
 
 class DifferTest extends TestCase
@@ -17,7 +16,11 @@ class DifferTest extends TestCase
         $testFilePath2 = $this->getFilePath($testFileName2);
         $diff = genDiff($testFilePath1, $testFilePath2, $format);
         $expectedResult = file_get_contents($expectedFilePath);
-        $this->assertEquals($expectedResult, $diff);
+        if ($format == 'json') {
+            $this->assertJsonStringEqualsJsonString($expectedResult, $diff);
+        } else {
+            $this->assertEquals($expectedResult, $diff);
+        }
     }
 
     public function getFilePath($fileName)

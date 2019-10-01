@@ -5,9 +5,8 @@ use Symfony\Component\Yaml\Yaml;
 
 function parseFile($filePath)
 {
-    $pathToFile = $filePath[0] == '/' ? $filePath : $_SERVER['PWD'] . '/' . $filePath;
-    $extension = pathinfo($pathToFile, PATHINFO_EXTENSION);
-    $data = file_get_contents($pathToFile);
+    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+    $data = file_get_contents($filePath);
     switch ($extension) {
         case "json":
             return json_decode($data, false);

@@ -1,8 +1,5 @@
 {
   "timeout": 20,
   "verbose": true,
-  "host": "hexlet.io",
-  "same": "same value",
-  "test3": "1234",
-  "test4": false
+  "host": "hexlet.io"
 }

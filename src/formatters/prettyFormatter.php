@@ -5,13 +5,16 @@ function prettyFormatter($diff, $depth = 0)
 {
     $reportResult = array_reduce($diff, function ($report, $item) use ($depth) {
         $indent = str_repeat("    ", $depth);
-        $action = $item->action ?? '';
+        $type = $item->type ?? '';
         $value = isset($item->children) ? "{" : $item->value;
-        if ($action) {
-            $action == 'add' ? $report[] = $indent . "  + $item->key: $value" : null;
-            $action == 'remove' ? $report[] = $indent .  "  - $item->key: $value" : null;
-            $action == 'change' ? $report[] = $indent .  "  + $item->key: $value[added]" : null;
-            $action == 'change' ? $report[] = $indent .  "  - $item->key: $value[removed]" : null;
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        }
+        if ($type) {
+            $type == 'added' ? $report[] = $indent . "  + $item->key: $value" : null;
+            $type == 'removed' ? $report[] = $indent .  "  - $item->key: $value" : null;
+            $type == 'changed' ? $report[] = $indent .  "  + $item->key: $value[new]" : null;
+            $type == 'changed' ? $report[] = $indent .  "  - $item->key: $value[old]" : null;
         } else {
             $report[] = $indent . "    $item->key: $value";
         }
