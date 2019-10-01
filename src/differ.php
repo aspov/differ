@@ -35,14 +35,14 @@ function compare($content1, $content2)
         $value2 = array_key_exists($key, $content2) ? $content2[$key] : null;
         $hasChildren = is_object($value1) || is_object($value2) ? true : false;
         $node = ['value' => $value1];
-        if ($value1 && $value2 && $value1 != $value2 && !$hasChildren) {
-            $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
-        } elseif ($value1 && !$value2) {
+        if ($value1 && !$value2) {
             $node = ['type' => 'removed', 'value' => $value1];
             $value2 = $value1;
         } elseif (!$value1 && $value2) {
             $node = ['type' => 'added', 'value' => $value2];
             $value1 = $value2;
+        } elseif ($value1 != $value2 && !$hasChildren) {
+            $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
         }
         if ($hasChildren) {
             unset($node['value']);
