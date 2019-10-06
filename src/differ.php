@@ -7,11 +7,6 @@ use function Differ\formatters\plainFormatter;
 use function Differ\formatters\jsonFormatter;
 use Funct\Collection;
 
-function getDirectPath($path)
-{
-    return $path[0] == '/' ? $path : getcwd() . '/' . $path;
-}
-
 function format($diff, $format)
 {
     if ($format == 'pretty') {
@@ -23,8 +18,10 @@ function format($diff, $format)
     }
 }
 
-function genDiff($filePath1, $filePath2, $format = 'pretty')
+function genDiff($path1, $path2, $format = 'pretty')
 {
+    $filePath1 = $path1[0] == '/' ? $path1 : getcwd() . '/' . $path1;
+    $filePath2 = $path2[0] == '/' ? $path2 : getcwd() . '/' . $path2;
     $fileData1 = file_get_contents($filePath1);
     $fileData2 = file_get_contents($filePath2);
     $fileExtension1 = pathinfo($filePath1, PATHINFO_EXTENSION);
