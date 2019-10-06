@@ -16,11 +16,7 @@ class DifferTest extends TestCase
         $testFilePath2 = $this->getFilePath($testFileName2);
         $diff = genDiff($testFilePath1, $testFilePath2, $format);
         $expectedResult = file_get_contents($expectedFilePath);
-        if ($format == 'json') {
-            $this->assertJsonStringEqualsJsonString($expectedResult, $diff);
-        } else {
-            $this->assertEquals($expectedResult, $diff);
-        }
+        $this->assertEquals($expectedResult, $diff);
     }
 
     public function getFilePath($fileName)
