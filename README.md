@@ -44,4 +44,4 @@ AST
 Plain format
 [![asciicast](https://asciinema.org/a/268627.svg)](https://asciinema.org/a/268627)
 Json format
-[![asciicast](https://asciinema.org/a/269034.svg)](https://asciinema.org/a/269034)
+[![asciicast](https://asciinema.org/a/272739.svg)](https://asciinema.org/a/272739)
