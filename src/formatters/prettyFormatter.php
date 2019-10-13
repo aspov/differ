@@ -24,15 +24,20 @@ function prettyFormat($diff, $indent = '')
         $value = getValue($item) ?? prettyFormat($item->children, $indent . DEFAULT_INDENT);
         switch ($item->type) {
             case 'added':
-                return "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value\n";
+                $report = "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value\n";
+                break;
             case 'removed':
-                return "{$report}{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value\n";
+                $report = "{$report}{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value\n";
+                break;
             case 'changed':
-                return "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value[new]\n" .
-                                "{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value[old]\n";
+                $report = "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value[new]\n" .
+                                   "{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value[old]\n";
+                break;
             case 'unchanged':
-                return "{$report}{$indent}" . DEFAULT_INDENT . "$item->key: $value\n";
+                $report = "{$report}{$indent}" . DEFAULT_INDENT . "$item->key: $value\n";
+                break;
         }
+        return $report;
     }, "\n");
     return "{{$result}{$indent}}";
 }

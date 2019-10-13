@@ -46,23 +46,23 @@ function compare($content1, $content2)
     $result = array_map(function ($key) use ($content1, $content2) {
         $value1 = $content1[$key] ?? null;
         $value2 = $content2[$key] ?? null;
-        $nodeKey = ['key' => $key];
+        $contentsHasKey = array_key_exists($key, $content1) && array_key_exists($key, $content2);
         $hasChildren = is_object($value1) || is_object($value2) ? true  : false;
-        if (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $hasChildren) {
+        if ($contentsHasKey && $hasChildren) {
             $nodeValue = ['children' => compare($value1, $value2)];
-        } elseif (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $value1 == $value2) {
+        } elseif ($contentsHasKey && $value1 == $value2) {
             $nodeValue = ['value' => $value1];
-        } elseif (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $value1 != $value2) {
+        } elseif ($contentsHasKey && $value1 != $value2) {
             $nodeType = ['type' => 'changed'];
             $nodeValue = ['value' => ['old' => $value1, 'new' => $value2]];
-        } elseif (array_key_exists($key, $content1) && !array_key_exists($key, $content2)) {
+        } elseif (array_key_exists($key, $content1)) {
             $nodeType = ['type' => 'removed'];
             $nodeValue = $hasChildren ? ['children' => compare($value1, $value1)] : ['value' => $value1];
-        } elseif (!array_key_exists($key, $content1) && array_key_exists($key, $content2)) {
+        } elseif (array_key_exists($key, $content2)) {
             $nodeType = ['type' => 'added'];
             $nodeValue = $hasChildren ? ['children' => compare($value2, $value2)] : ['value' => $value2];
         }
-        return (object)array_merge($nodeKey, $nodeType ?? ['type' => 'unchanged'], $nodeValue);
+        return (object)array_merge(['key' => $key], $nodeType ?? ['type' => 'unchanged'], $nodeValue);
     }, array_values($keys));
     return $result;
 }
