@@ -1,7 +1,7 @@
 <?php
-namespace Differ\formatters;
+namespace Differ\formatters\jsonFormatter;
 
-function jsonFormatter($diff)
+function jsonFormat($diff)
 {
     return json_encode($diff, JSON_PRETTY_PRINT);
 }

@@ -1,30 +1,41 @@
 <?php
-namespace Differ\formatters;
+namespace Differ\formatters\plainFormatter;
 
 use \Funct\Collection;
 
-function plainFormatter($diff, $depthKey = '')
+function getValue($item)
 {
-    $reportResult = array_reduce($diff, function ($report, $item) use ($depthKey) {
-        $type = $item->type ?? '';
-        $key = "'{$depthKey}{$item->key}'";
-        $value = isset($item->children) ? 'complex value' : $item->value;
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
+    if (property_exists($item, 'value')) {
+        if (is_bool($item->value)) {
+            return $item->value ? 'true' : 'false';
+        } elseif (is_null($item->value)) {
+            return 'null';
+        } else {
+            return $item->value;
         }
-        if ($type) {
-            ($type == 'added') ?
-            $report[] = "Property {$key} was added with value: '$value'" : null;
-            ($type == 'removed') ?
-            $report[] = "Property {$key} was removed" : null;
-            ($type == 'changed') ?
-            $report[] = "Property {$key} was changed. From '$value[old]' to '$value[new]'" : null;
-        }
-        if (isset($item->children)) {
-            $depthKey = "$item->key.";
-            $report[] = plainFormatter($item->children, $depthKey);
+    }
+}
+
+function plainFormat($diff, $path = '')
+{
+    $result = array_reduce($diff, function ($report, $item) use ($path) {
+        $property = "'{$path}{$item->key}'";
+        $value = getValue($item) ?? 'complex value';
+        switch ($item->type) {
+            case 'added':
+                $report[] = "Property {$property} was added with value: '$value'";
+                break;
+            case 'removed':
+                $report[] = "Property {$property} was removed";
+                break;
+            case 'changed':
+                $report[] = "Property {$property} was changed. From '$value[old]' to '$value[new]'";
+                break;
+            case $value == 'complex value':
+                $report[] = plainFormat($item->children, "$item->key.");
+                break;
         }
         return $report;
     }, []);
-    return implode("\n", Collection\compact($reportResult));
+    return implode("\n", Collection\compact($result));
 }

@@ -2,26 +2,32 @@
 namespace Differ\differ;
 
 use function Differ\parsers\parse;
-use function Differ\formatters\prettyFormatter;
-use function Differ\formatters\plainFormatter;
-use function Differ\formatters\jsonFormatter;
+use function Differ\formatters\prettyFormatter\prettyFormat;
+use function Differ\formatters\plainFormatter\plainFormat;
+use function Differ\formatters\jsonFormatter\jsonFormat;
 use Funct\Collection;
 
 function format($diff, $format)
 {
-    if ($format == 'pretty') {
-        return prettyFormatter($diff);
-    } elseif ($format == 'plain') {
-        return plainFormatter($diff);
-    } elseif ($format == 'json') {
-        return jsonFormatter($diff);
+    switch ($format) {
+        case 'pretty':
+            return prettyFormat($diff);
+        case 'plain':
+            return plainFormat($diff);
+        case 'json':
+            return jsonFormat($diff);
     }
+}
+
+function getAbsolutePath($path)
+{
+    return $path[0] == '/' ? $path : getcwd() . '/' . $path;
 }
 
 function genDiff($path1, $path2, $format = 'pretty')
 {
-    $filePath1 = $path1[0] == '/' ? $path1 : getcwd() . '/' . $path1;
-    $filePath2 = $path2[0] == '/' ? $path2 : getcwd() . '/' . $path2;
+    $filePath1 = getAbsolutePath($path1);
+    $filePath2 = getAbsolutePath($path2);
     $fileData1 = file_get_contents($filePath1);
     $fileData2 = file_get_contents($filePath2);
     $fileExtension1 = pathinfo($filePath1, PATHINFO_EXTENSION);
@@ -37,26 +43,26 @@ function compare($content1, $content2)
     $content1 = get_object_vars($content1);
     $content2 = get_object_vars($content2);
     $keys = Collection\union(array_keys($content1), array_keys($content2));
-    $result = Collection\flatten(array_map(function ($key) use ($content1, $content2) {
-        $value1 = array_key_exists($key, $content1) ? $content1[$key] : null;
-        $value2 = array_key_exists($key, $content2) ? $content2[$key] : null;
-        $hasChildren = is_object($value1) || is_object($value2) ? true : false;
-        if ($value1 && !$value2) {
-            $node = ['type' => 'removed', 'value' => $value1];
-            $value2 = $value1;
-        } elseif (!$value1 && $value2) {
-            $node = ['type' => 'added', 'value' => $value2];
-            $value1 = $value2;
-        } elseif ($value1 != $value2 && !$hasChildren) {
-            $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
-        } else {
-            $node = ['value' => $value1];
+    $result = array_map(function ($key) use ($content1, $content2) {
+        $value1 = $content1[$key] ?? null;
+        $value2 = $content2[$key] ?? null;
+        $nodeKey = ['key' => $key];
+        $hasChildren = is_object($value1) || is_object($value2) ? true  : false;
+        if (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $hasChildren) {
+            $nodeValue = ['children' => compare($value1, $value2)];
+        } elseif (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $value1 == $value2) {
+            $nodeValue = ['value' => $value1];
+        } elseif (array_key_exists($key, $content1) && array_key_exists($key, $content2) && $value1 != $value2) {
+            $nodeType = ['type' => 'changed'];
+            $nodeValue = ['value' => ['old' => $value1, 'new' => $value2]];
+        } elseif (array_key_exists($key, $content1) && !array_key_exists($key, $content2)) {
+            $nodeType = ['type' => 'removed'];
+            $nodeValue = $hasChildren ? ['children' => compare($value1, $value1)] : ['value' => $value1];
+        } elseif (!array_key_exists($key, $content1) && array_key_exists($key, $content2)) {
+            $nodeType = ['type' => 'added'];
+            $nodeValue = $hasChildren ? ['children' => compare($value2, $value2)] : ['value' => $value2];
         }
-        if ($hasChildren) {
-            unset($node['value']);
-            $node['children'] = compare($value1, $value2);
-        }
-        return (object)array_merge(['key' => $key], $node);
-    }, $keys));
+        return (object)array_merge($nodeKey, $nodeType ?? ['type' => 'unchanged'], $nodeValue);
+    }, array_values($keys));
     return $result;
 }

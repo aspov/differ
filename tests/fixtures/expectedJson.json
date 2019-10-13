@@ -1,9 +1,11 @@
 [
     {
         "key": "common",
+        "type": "unchanged",
         "children": [
             {
                 "key": "setting1",
+                "type": "unchanged",
                 "value": "Value 1"
             },
             {
@@ -13,6 +15,7 @@
             },
             {
                 "key": "setting3",
+                "type": "unchanged",
                 "value": true
             },
             {
@@ -21,6 +24,7 @@
                 "children": [
                     {
                         "key": "key",
+                        "type": "unchanged",
                         "value": "value"
                     }
                 ]
@@ -36,6 +40,7 @@
                 "children": [
                     {
                         "key": "key5",
+                        "type": "unchanged",
                         "value": "value5"
                     }
                 ]
@@ -44,6 +49,7 @@
     },
     {
         "key": "group1",
+        "type": "unchanged",
         "children": [
             {
                 "key": "baz",
@@ -55,6 +61,7 @@
             },
             {
                 "key": "foo",
+                "type": "unchanged",
                 "value": "bar"
             }
         ]
@@ -65,6 +72,7 @@
         "children": [
             {
                 "key": "abc",
+                "type": "unchanged",
                 "value": "12345"
             }
         ]
@@ -75,6 +83,7 @@
         "children": [
             {
                 "key": "fee",
+                "type": "unchanged",
                 "value": "100500"
             }
         ]
