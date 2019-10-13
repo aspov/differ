@@ -46,13 +46,13 @@ function compare($content1, $content2)
     $result = array_map(function ($key) use ($content1, $content2) {
         $value1 = $content1[$key] ?? null;
         $value2 = $content2[$key] ?? null;
-        $contentsHasKey = array_key_exists($key, $content1) && array_key_exists($key, $content2);
+        $keysExists = array_key_exists($key, $content1) && array_key_exists($key, $content2);
         $hasChildren = is_object($value1) || is_object($value2) ? true  : false;
-        if ($contentsHasKey && $hasChildren) {
+        if ($keysExists && $hasChildren) {
             $nodeValue = ['children' => compare($value1, $value2)];
-        } elseif ($contentsHasKey && $value1 == $value2) {
+        } elseif ($keysExists && $value1 == $value2) {
             $nodeValue = ['value' => $value1];
-        } elseif ($contentsHasKey && $value1 != $value2) {
+        } elseif ($keysExists && $value1 != $value2) {
             $nodeType = ['type' => 'changed'];
             $nodeValue = ['value' => ['old' => $value1, 'new' => $value2]];
         } elseif (array_key_exists($key, $content1)) {
