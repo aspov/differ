@@ -3,16 +3,14 @@ namespace Differ\formatters\plainFormatter;
 
 use \Funct\Collection;
 
-function getValue($item)
+function getCorrectValue($value)
 {
-    if (property_exists($item, 'value')) {
-        if (is_bool($item->value)) {
-            return $item->value ? 'true' : 'false';
-        } elseif (is_null($item->value)) {
-            return 'null';
-        } else {
-            return $item->value;
-        }
+    if (is_bool($value)) {
+        return $value ? 'true' : 'false';
+    } elseif (is_null($value)) {
+        return 'null';
+    } else {
+        return $value;
     }
 }
 
@@ -20,7 +18,8 @@ function plainFormat($diff, $path = '')
 {
     $result = array_reduce($diff, function ($report, $item) use ($path) {
         $property = "'{$path}{$item->key}'";
-        $value = getValue($item) ?? 'complex value';
+        $hasValue = property_exists($item, 'value');
+        $value = $hasValue ? getCorrectValue($item->value) : 'complex value';
         switch ($item->type) {
             case 'added':
                 $report[] = "Property {$property} was added with value: '$value'";

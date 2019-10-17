@@ -47,7 +47,7 @@ function compare($content1, $content2)
         $value1 = $content1[$key] ?? null;
         $value2 = $content2[$key] ?? null;
         $keysExists = array_key_exists($key, $content1) && array_key_exists($key, $content2);
-        $hasChildren = is_object($value1) || is_object($value2) ? true  : false;
+        $hasChildren = is_object($value1) || is_object($value2);
         if ($keysExists && $hasChildren) {
             $nodeValue = ['children' => compare($value1, $value2)];
         } elseif ($keysExists && $value1 == $value2) {

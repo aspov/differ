@@ -5,39 +5,39 @@ const DEFAULT_INDENT = '    ';
 const INDENT_FOR_ADDED = '  + ';
 const INDENT_FOR_REMOVED = '  - ';
 
-function getValue($item)
+function getCorrectValue($value)
 {
-    if (property_exists($item, 'value')) {
-        if (is_bool($item->value)) {
-            return $item->value ? 'true' : 'false';
-        } elseif (is_null($item->value)) {
-            return 'null';
-        } else {
-            return $item->value;
-        }
+    if (is_bool($value)) {
+        return $value ? 'true' : 'false';
+    } elseif (is_null($value)) {
+        return 'null';
+    } else {
+        return $value;
     }
 }
 
 function prettyFormat($diff, $indent = '')
 {
     $result = array_reduce($diff, function ($report, $item) use ($indent) {
-        $value = getValue($item) ?? prettyFormat($item->children, $indent . DEFAULT_INDENT);
+        $hasValue = property_exists($item, 'value');
+        $value = $hasValue ? getCorrectValue($item->value) : prettyFormat($item->children, $indent . DEFAULT_INDENT);
+        $resultValue[] = $report;
         switch ($item->type) {
             case 'added':
-                $report = "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value\n";
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: $value";
                 break;
             case 'removed':
-                $report = "{$report}{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value\n";
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: $value";
                 break;
             case 'changed':
-                $report = "{$report}{$indent}" . INDENT_FOR_ADDED . "$item->key: $value[new]\n" .
-                                   "{$indent}" . INDENT_FOR_REMOVED . "$item->key: $value[old]\n";
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: $value[new]";
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: $value[old]";
                 break;
             case 'unchanged':
-                $report = "{$report}{$indent}" . DEFAULT_INDENT . "$item->key: $value\n";
+                $resultValue[] = DEFAULT_INDENT . "$item->key: $value";
                 break;
         }
-        return $report;
-    }, "\n");
-    return "{{$result}{$indent}}";
+        return implode("\n" . $indent, $resultValue);
+    }, '');
+    return "{{$result}\n{$indent}}";
 }
