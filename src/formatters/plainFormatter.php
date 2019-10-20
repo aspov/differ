@@ -17,22 +17,21 @@ function getCorrectValue($value)
 function plainFormat($diff, $path = '')
 {
     $result = array_reduce($diff, function ($report, $item) use ($path) {
-        $property = "'{$path}{$item->key}'";
-        $hasValue = property_exists($item, 'value');
-        $value = $hasValue ? getCorrectValue($item->value) : 'complex value';
         switch ($item->type) {
             case 'added':
-                $report[] = "Property {$property} was added with value: '$value'";
+                $value = property_exists($item, 'value') ? getCorrectValue($item->value) : 'complex value';
+                $report[] = "Property '{$path}{$item->key}' was added with value: '$value'";
                 break;
             case 'removed':
-                $report[] = "Property {$property} was removed";
+                $report[] = "Property '{$path}{$item->key}' was removed";
                 break;
             case 'changed':
-                $report[] = "Property {$property} was changed. From '$value[old]' to '$value[new]'";
+                $oldValue = getCorrectValue($item->value['old']);
+                $newValue = getCorrectValue($item->value['new']);
+                $report[] = "Property '{$path}{$item->key}' was changed. From '$oldValue' to '$newValue'";
                 break;
-            case $value == 'complex value':
-                $report[] = plainFormat($item->children, "$item->key.");
-                break;
+            case 'unchanged':
+                $report[] = property_exists($item, 'children') ? plainFormat($item->children, "$item->key.") : [];
         }
         return $report;
     }, []);
