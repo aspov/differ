@@ -18,20 +18,26 @@ function plainFormat($diff, $path = '')
 {
     $result = array_reduce($diff, function ($report, $item) use ($path) {
         switch ($item->type) {
+            case 'unchanged nested':
+                $report[] = plainFormat($item->children, "$item->key.");
+                break;
             case 'added':
-                $value = property_exists($item, 'value') ? getCorrectValue($item->value) : 'complex value';
+                $value = getCorrectValue($item->value);
                 $report[] = "Property '{$path}{$item->key}' was added with value: '$value'";
                 break;
+            case 'added nested':
+                $report[] = "Property '{$path}{$item->key}' was added with value: 'complex value'";
+                break;
             case 'removed':
+                $report[] = "Property '{$path}{$item->key}' was removed";
+                break;
+            case 'removed nested':
                 $report[] = "Property '{$path}{$item->key}' was removed";
                 break;
             case 'changed':
                 $oldValue = getCorrectValue($item->value['old']);
                 $newValue = getCorrectValue($item->value['new']);
                 $report[] = "Property '{$path}{$item->key}' was changed. From '$oldValue' to '$newValue'";
-                break;
-            case 'unchanged':
-                $report[] = property_exists($item, 'children') ? plainFormat($item->children, "$item->key.") : [];
         }
         return $report;
     }, []);

@@ -20,25 +20,27 @@ function prettyFormat($diff, $depth = 0)
 {
     $result = array_reduce($diff, function ($report, $item) use ($depth) {
         switch ($item->type) {
+            case 'unchanged':
+                $resultValue[] = DEFAULT_INDENT . "$item->key: " . getCorrectValue($item->value);
+                break;
+            case 'unchanged nested':
+                $resultValue[] = DEFAULT_INDENT . "$item->key: " . prettyFormat($item->children, $depth + 1);
+                break;
             case 'added':
-                $nodeValue = property_exists($item, 'value') ?
-                getCorrectValue($item->value) : prettyFormat($item->children, $depth + 1);
-                $resultValue[] = INDENT_FOR_ADDED . "$item->key: $nodeValue";
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getCorrectValue($item->value);
+                break;
+            case 'added nested':
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . prettyFormat($item->children, $depth + 1);
                 break;
             case 'removed':
-                $nodeValue = property_exists($item, 'value') ?
-                getCorrectValue($item->value) : prettyFormat($item->children, $depth + 1);
-                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: $nodeValue";
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getCorrectValue($item->value);
+                break;
+            case 'removed nested':
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . prettyFormat($item->children, $depth + 1);
                 break;
             case 'changed':
                 $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getCorrectValue($item->value['new']);
                 $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getCorrectValue($item->value['old']);
-                break;
-            case 'unchanged':
-                $nodeValue = property_exists($item, 'value') ?
-                getCorrectValue($item->value) : prettyFormat($item->children, $depth + 1);
-                $resultValue[] = DEFAULT_INDENT . "$item->key: $nodeValue";
-                break;
         }
         return implode("\n" . str_repeat(DEFAULT_INDENT, $depth), array_merge([$report], $resultValue));
     }, '');

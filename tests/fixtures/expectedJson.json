@@ -1,7 +1,7 @@
 [
     {
         "key": "common",
-        "type": "unchanged",
+        "type": "unchanged nested",
         "children": [
             {
                 "key": "setting1",
@@ -20,7 +20,7 @@
             },
             {
                 "key": "setting6",
-                "type": "removed",
+                "type": "removed nested",
                 "children": [
                     {
                         "key": "key",
@@ -36,7 +36,7 @@
             },
             {
                 "key": "setting5",
-                "type": "added",
+                "type": "added nested",
                 "children": [
                     {
                         "key": "key5",
@@ -49,7 +49,7 @@
     },
     {
         "key": "group1",
-        "type": "unchanged",
+        "type": "unchanged nested",
         "children": [
             {
                 "key": "baz",
@@ -68,7 +68,7 @@
     },
     {
         "key": "group2",
-        "type": "removed",
+        "type": "removed nested",
         "children": [
             {
                 "key": "abc",
@@ -79,7 +79,7 @@
     },
     {
         "key": "group3",
-        "type": "added",
+        "type": "added nested",
         "children": [
             {
                 "key": "fee",

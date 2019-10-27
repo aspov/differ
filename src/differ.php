@@ -46,23 +46,26 @@ function compare($content1, $content2)
     $result = array_map(function ($key) use ($content1, $content2) {
         $value1 = $content1[$key] ?? null;
         $value2 = $content2[$key] ?? null;
-        $keysExists = array_key_exists($key, $content1) && array_key_exists($key, $content2);
+        $cont1HasKey = array_key_exists($key, $content1);
+        $cont2HasKey = array_key_exists($key, $content2);
         $hasChildren = is_object($value1) || is_object($value2);
+        $keysExists = $cont1HasKey && $cont2HasKey;
         if ($keysExists && $hasChildren) {
-            $nodeValue = ['children' => compare($value1, $value2)];
+            $node = ['type' => 'unchanged nested','children' => compare($value1, $value2)];
         } elseif ($keysExists && $value1 == $value2) {
-            $nodeValue = ['value' => $value1];
+            $node = ['type' => 'unchanged', 'value' => $value1];
         } elseif ($keysExists && $value1 != $value2) {
-            $nodeType = ['type' => 'changed'];
-            $nodeValue = ['value' => ['old' => $value1, 'new' => $value2]];
-        } elseif (array_key_exists($key, $content1)) {
-            $nodeType = ['type' => 'removed'];
-            $nodeValue = $hasChildren ? ['children' => compare($value1, $value1)] : ['value' => $value1];
-        } elseif (array_key_exists($key, $content2)) {
-            $nodeType = ['type' => 'added'];
-            $nodeValue = $hasChildren ? ['children' => compare($value2, $value2)] : ['value' => $value2];
+            $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
+        } elseif ($cont1HasKey && $hasChildren) {
+            $node = ['type' => 'removed nested', 'children' => compare($value1, $value1)];
+        } elseif ($cont1HasKey) {
+            $node = ['type' => 'removed', 'value' => $value1];
+        } elseif ($cont2HasKey && $hasChildren) {
+            $node = ['type' => 'added nested', 'children' => compare($value2, $value2)];
+        } elseif ($cont2HasKey) {
+            $node = ['type' => 'added', 'value' => $value2];
         }
-        return (object)array_merge(['key' => $key], $nodeType ?? ['type' => 'unchanged'], $nodeValue);
+        return (object)array_merge(['key' => $key], $node);
     }, array_values($keys));
     return $result;
 }
