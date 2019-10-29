@@ -16,31 +16,39 @@ function getCorrectValue($value)
     }
 }
 
+function getStringValue($itemValue, $depth = 0)
+{
+    if (is_object($itemValue) || is_array($itemValue)) {
+        foreach ($itemValue as $key => $value) {
+            $value = is_object($value) || is_array($value) ?
+            getStringValue($value, $depth + 1) : getCorrectValue($value);
+            $result[] = str_repeat(DEFAULT_INDENT, $depth + 1) . "$key: $value";
+        }
+        return "{\n" . implode("\n", $result) . "\n" . str_repeat(DEFAULT_INDENT, $depth) . "}";
+    } else {
+        return getCorrectValue($itemValue);
+    }
+}
+
 function prettyFormat($diff, $depth = 0)
 {
     $result = array_reduce($diff, function ($report, $item) use ($depth) {
         switch ($item->type) {
-            case 'unchanged':
-                $resultValue[] = DEFAULT_INDENT . "$item->key: " . getCorrectValue($item->value);
-                break;
-            case 'unchanged nested':
+            case 'nested':
                 $resultValue[] = DEFAULT_INDENT . "$item->key: " . prettyFormat($item->children, $depth + 1);
                 break;
-            case 'added':
-                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getCorrectValue($item->value);
+            case 'unchanged':
+                $resultValue[] = DEFAULT_INDENT . "$item->key: " . getStringValue($item->value, $depth + 1);
                 break;
-            case 'added nested':
-                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . prettyFormat($item->children, $depth + 1);
+            case 'added':
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getStringValue($item->value, $depth + 1);
                 break;
             case 'removed':
-                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getCorrectValue($item->value);
-                break;
-            case 'removed nested':
-                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . prettyFormat($item->children, $depth + 1);
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getStringValue($item->value, $depth + 1);
                 break;
             case 'changed':
-                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getCorrectValue($item->value['new']);
-                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getCorrectValue($item->value['old']);
+                $resultValue[] = INDENT_FOR_ADDED . "$item->key: " . getStringValue($item->value['new'], $depth + 1);
+                $resultValue[] = INDENT_FOR_REMOVED . "$item->key: " . getStringValue($item->value['old'], $depth + 1);
         }
         return implode("\n" . str_repeat(DEFAULT_INDENT, $depth), array_merge([$report], $resultValue));
     }, '');

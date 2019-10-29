@@ -1,7 +1,7 @@
 [
     {
         "key": "common",
-        "type": "unchanged nested",
+        "type": "nested",
         "children": [
             {
                 "key": "setting1",
@@ -20,14 +20,10 @@
             },
             {
                 "key": "setting6",
-                "type": "removed nested",
-                "children": [
-                    {
-                        "key": "key",
-                        "type": "unchanged",
-                        "value": "value"
-                    }
-                ]
+                "type": "removed",
+                "value": {
+                    "key": "value"
+                }
             },
             {
                 "key": "setting4",
@@ -36,20 +32,16 @@
             },
             {
                 "key": "setting5",
-                "type": "added nested",
-                "children": [
-                    {
-                        "key": "key5",
-                        "type": "unchanged",
-                        "value": "value5"
-                    }
-                ]
+                "type": "added",
+                "value": {
+                    "key5": "value5"
+                }
             }
         ]
     },
     {
         "key": "group1",
-        "type": "unchanged nested",
+        "type": "nested",
         "children": [
             {
                 "key": "baz",
@@ -68,24 +60,16 @@
     },
     {
         "key": "group2",
-        "type": "removed nested",
-        "children": [
-            {
-                "key": "abc",
-                "type": "unchanged",
-                "value": "12345"
-            }
-        ]
+        "type": "removed",
+        "value": {
+            "abc": "12345"
+        }
     },
     {
         "key": "group3",
-        "type": "added nested",
-        "children": [
-            {
-                "key": "fee",
-                "type": "unchanged",
-                "value": "100500"
-            }
-        ]
+        "type": "added",
+        "value": {
+            "fee": "100500"
+        }
     }
 ]

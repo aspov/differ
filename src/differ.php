@@ -48,20 +48,16 @@ function compare($content1, $content2)
         $value2 = $content2[$key] ?? null;
         $cont1HasKey = array_key_exists($key, $content1);
         $cont2HasKey = array_key_exists($key, $content2);
-        $hasChildren = is_object($value1) || is_object($value2);
+        $hasChildren = is_object($value1) && is_object($value2);
         $keysExists = $cont1HasKey && $cont2HasKey;
         if ($keysExists && $hasChildren) {
-            $node = ['type' => 'unchanged nested','children' => compare($value1, $value2)];
+            $node = ['type' => 'nested','children' => compare($value1, $value2)];
         } elseif ($keysExists && $value1 == $value2) {
             $node = ['type' => 'unchanged', 'value' => $value1];
         } elseif ($keysExists && $value1 != $value2) {
             $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
-        } elseif ($cont1HasKey && $hasChildren) {
-            $node = ['type' => 'removed nested', 'children' => compare($value1, $value1)];
         } elseif ($cont1HasKey) {
             $node = ['type' => 'removed', 'value' => $value1];
-        } elseif ($cont2HasKey && $hasChildren) {
-            $node = ['type' => 'added nested', 'children' => compare($value2, $value2)];
         } elseif ($cont2HasKey) {
             $node = ['type' => 'added', 'value' => $value2];
         }

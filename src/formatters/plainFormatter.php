@@ -14,29 +14,32 @@ function getCorrectValue($value)
     }
 }
 
+function getStringValue($itemValue)
+{
+    if (is_object($itemValue) || is_array($itemValue)) {
+        return 'complex value';
+    } else {
+        return getCorrectValue($itemValue);
+    }
+}
+
 function plainFormat($diff, $path = '')
 {
     $result = array_reduce($diff, function ($report, $item) use ($path) {
         switch ($item->type) {
-            case 'unchanged nested':
+            case 'nested':
                 $report[] = plainFormat($item->children, "$item->key.");
                 break;
             case 'added':
-                $value = getCorrectValue($item->value);
+                $value = getStringValue($item->value);
                 $report[] = "Property '{$path}{$item->key}' was added with value: '$value'";
-                break;
-            case 'added nested':
-                $report[] = "Property '{$path}{$item->key}' was added with value: 'complex value'";
                 break;
             case 'removed':
                 $report[] = "Property '{$path}{$item->key}' was removed";
                 break;
-            case 'removed nested':
-                $report[] = "Property '{$path}{$item->key}' was removed";
-                break;
             case 'changed':
-                $oldValue = getCorrectValue($item->value['old']);
-                $newValue = getCorrectValue($item->value['new']);
+                $oldValue = getStringValue($item->value['old']);
+                $newValue = getStringValue($item->value['new']);
                 $report[] = "Property '{$path}{$item->key}' was changed. From '$oldValue' to '$newValue'";
         }
         return $report;
