@@ -18,12 +18,13 @@ function getCorrectValue($value)
 
 function getStringValue($itemValue, $depth = 0)
 {
-    if (is_object($itemValue) || is_array($itemValue)) {
-        foreach ($itemValue as $key => $value) {
-            $value = is_object($value) || is_array($value) ?
-            getStringValue($value, $depth + 1) : getCorrectValue($value);
-            $result[] = str_repeat(DEFAULT_INDENT, $depth + 1) . "$key: $value";
-        }
+    $itemValue = is_object($itemValue) ? get_object_vars($itemValue) : $itemValue;
+    if (is_array($itemValue)) {
+        $result = array_map(function ($key) use ($itemValue, $depth) {
+            $value = is_array($itemValue[$key]) ? getStringValue($itemValue[$key], $depth + 1) :
+            getCorrectValue($itemValue[$key]);
+            return str_repeat(DEFAULT_INDENT, $depth + 1) . "$key: $itemValue[$key]";
+        }, array_keys($itemValue));
         return "{\n" . implode("\n", $result) . "\n" . str_repeat(DEFAULT_INDENT, $depth) . "}";
     } else {
         return getCorrectValue($itemValue);
