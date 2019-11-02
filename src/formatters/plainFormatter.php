@@ -38,8 +38,8 @@ function plainFormat($diff, $path = '')
                 $report[] = "Property '{$path}{$item->key}' was removed";
                 break;
             case 'changed':
-                $oldValue = getStringValue($item->value['old']);
-                $newValue = getStringValue($item->value['new']);
+                $oldValue = getStringValue($item->oldValue);
+                $newValue = getStringValue($item->newValue);
                 $report[] = "Property '{$path}{$item->key}' was changed. From '$oldValue' to '$newValue'";
         }
         return $report;

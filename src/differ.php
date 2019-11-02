@@ -55,7 +55,7 @@ function compare($content1, $content2)
         } elseif ($keysExists && $value1 == $value2) {
             $node = ['type' => 'unchanged', 'value' => $value1];
         } elseif ($keysExists && $value1 != $value2) {
-            $node = ['type' => 'changed', 'value' => ['old' => $value1, 'new' => $value2]];
+            $node = ['type' => 'changed', 'oldValue' => $value1, 'newValue' => $value2];
         } elseif ($cont1HasKey) {
             $node = ['type' => 'removed', 'value' => $value1];
         } elseif ($cont2HasKey) {

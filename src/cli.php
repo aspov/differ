@@ -1,5 +1,5 @@
 <?php
-namespace Differ;
+namespace Differ\cli;
 
 use function Differ\differ\genDiff;
 

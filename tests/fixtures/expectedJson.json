@@ -46,10 +46,8 @@
             {
                 "key": "baz",
                 "type": "changed",
-                "value": {
-                    "old": "bas",
-                    "new": "bars"
-                }
+                "oldValue": "bas",
+                "newValue": "bars"
             },
             {
                 "key": "foo",
